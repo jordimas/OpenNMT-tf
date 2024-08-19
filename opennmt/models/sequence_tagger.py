@@ -3,6 +3,7 @@
 import numpy as np
 import tensorflow as tf
 import tensorflow_addons as tfa
+from opennmt.tfa.text import crf_decode2, crf_log_likelihood2
 
 from opennmt import inputters
 from opennmt.models.model import Model
@@ -52,7 +53,7 @@ class SequenceTagger(Model):
         logits = self.output_layer(outputs)
         if not training:
             if self.crf_decoding:
-                tags_id, _ = tfa.text.crf_decode(logits, self.transition_params, length)
+                tags_id, _ = tfa.text.crf_decode2(logits, self.transition_params, length)
                 tags_id = tf.cast(tags_id, tf.int64)
             else:
                 tags_prob = tf.nn.softmax(logits)
@@ -68,7 +69,7 @@ class SequenceTagger(Model):
 
     def compute_loss(self, outputs, labels, training=True):
         if self.crf_decoding:
-            log_likelihood, _ = tfa.text.crf_log_likelihood(
+            log_likelihood, _ = tfa.text.crf_log_likelihood2(
                 outputs,
                 tf.cast(labels["tags_id"], tf.int32),
                 labels["length"],

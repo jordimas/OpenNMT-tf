@@ -142,7 +142,7 @@ from typing import Optional, Tuple
 # https://github.com/tensorflow/tensorflow/issues/29075 is resolved
 
 
-def crf_filtered_inputs(inputs: TensorLike, tag_bitmap: TensorLike) -> tf.Tensor:
+def crf_filtered_inputs2(inputs: TensorLike, tag_bitmap: TensorLike) -> tf.Tensor:
     """Constrains the inputs to filter out certain tags at each time step.
 
     tag_bitmap limits the allowed tags at each input time step.
@@ -168,7 +168,7 @@ def crf_filtered_inputs(inputs: TensorLike, tag_bitmap: TensorLike) -> tf.Tensor
     return filtered_inputs
 
 
-def crf_sequence_score(
+def crf_sequence_score2(
     inputs: TensorLike,
     tag_indices: TensorLike,
     sequence_lengths: TensorLike,
@@ -221,7 +221,7 @@ def crf_sequence_score(
     return tf.cond(tf.equal(tf.shape(inputs)[1], 1), _single_seq_fn, _multi_seq_fn)
 
 
-def crf_multitag_sequence_score(
+def crf_multitag_sequence_score2(
     inputs: TensorLike,
     tag_bitmap: TensorLike,
     sequence_lengths: TensorLike,
@@ -251,7 +251,7 @@ def crf_multitag_sequence_score(
     """
     tag_bitmap = tf.cast(tag_bitmap, dtype=tf.bool)
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
-    filtered_inputs = crf_filtered_inputs(inputs, tag_bitmap)
+    filtered_inputs = crf_filtered_inputs2(inputs, tag_bitmap)
 
     # If max_seq_len is 1, we skip the score calculation and simply gather the
     # unary potentials of all active tags.
@@ -318,7 +318,7 @@ def crf_log_norm(
     return tf.cond(tf.equal(tf.shape(inputs)[1], 1), _single_seq_fn, _multi_seq_fn)
 
 
-def crf_log_likelihood(
+def crf_log_likelihood2(
     inputs: TensorLike,
     tag_indices: TensorLike,
     sequence_lengths: TensorLike,
@@ -355,7 +355,7 @@ def crf_log_likelihood(
             initializer([num_tags, num_tags]), "transitions"
         )
     transition_params = tf.cast(transition_params, inputs.dtype)
-    sequence_scores = crf_sequence_score(
+    sequence_scores = crf_sequence_score2(
         inputs, tag_indices, sequence_lengths, transition_params
     )
     log_norm = crf_log_norm(inputs, sequence_lengths, transition_params)
@@ -584,7 +584,7 @@ class CrfDecodeForwardRnnCell(AbstractRNNCell2):
         return cls(**config)
 
 
-def crf_decode_forward(
+def crf_decode_forward2(
     inputs: TensorLike,
     state: TensorLike,
     transition_params: TensorLike,
@@ -616,7 +616,7 @@ def crf_decode_forward(
     return crf_fwd_layer(inputs, state, mask=mask)
 
 
-def crf_decode_backward(inputs: TensorLike, state: TensorLike) -> tf.Tensor:
+def crf_decode_backward2(inputs: TensorLike, state: TensorLike) -> tf.Tensor:
     """Computes backward decoding in a linear-chain CRF.
 
     Args:
@@ -639,7 +639,7 @@ def crf_decode_backward(inputs: TensorLike, state: TensorLike) -> tf.Tensor:
     return tf.transpose(tf.scan(_scan_fn, inputs, state), [1, 0, 2])
 
 
-def crf_decode(
+def crf_decode2(
     potentials: TensorLike, transition_params: TensorLike, sequence_length: TensorLike
 ) -> tf.Tensor:
     """Decode the highest scoring sequence of tags.
@@ -680,7 +680,7 @@ def crf_decode(
             tf.constant(0, dtype=tf.int32), sequence_length - 1
         )
 
-        backpointers, last_score = crf_decode_forward(
+        backpointers, last_score = crf_decode_forward2(
             inputs, initial_state, transition_params, sequence_length_less_one
         )
 
@@ -691,7 +691,7 @@ def crf_decode(
         initial_state = tf.cast(tf.argmax(last_score, axis=1), dtype=tf.int32)
         initial_state = tf.expand_dims(initial_state, axis=-1)
 
-        decode_tags = crf_decode_backward(backpointers, initial_state)
+        decode_tags = crf_decode_backward2(backpointers, initial_state)
         decode_tags = tf.squeeze(decode_tags, axis=[2])
         decode_tags = tf.concat([initial_state, decode_tags], axis=1)
         decode_tags = tf.reverse_sequence(decode_tags, sequence_length, seq_axis=1)
@@ -737,5 +737,5 @@ def crf_constrained_decode(
       best_score: A [batch_size] vector, containing the score of `decode_tags`.
     """
 
-    filtered_potentials = crf_filtered_inputs(potentials, tag_bitmap)
+    filtered_potentials = crf_filtered_inputs2(potentials, tag_bitmap)
     return crf_decode(filtered_potentials, transition_params, sequence_length)

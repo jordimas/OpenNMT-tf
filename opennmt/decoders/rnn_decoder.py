@@ -2,7 +2,7 @@
 
 import tensorflow as tf
 import tensorflow_addons as tfa
-from opennmt.tfa.rnn import LayerNormLSTMCell
+from opennmt.tfa.rnn import LayerNormLSTMCell2
 
 from opennmt.decoders import decoder
 from opennmt.layers import bridge, common, rnn, transformer
@@ -217,7 +217,7 @@ class RNMTPlusDecoder(decoder.Decoder):
         """
         super().__init__(**kwargs)
         if cell_class is None:
-            cell_class = LayerNormLSTMCell
+            cell_class = LayerNormLSTMCell2
         self.num_heads = num_heads
         self.num_units = num_units
         self.dropout = dropout

@@ -2,6 +2,7 @@
 
 import tensorflow as tf
 import tensorflow_addons as tfa
+from opennmt.tfa.rnn import LayerNormLSTMCell
 
 from opennmt.encoders.encoder import Encoder, SequentialEncoder
 from opennmt.layers import common, rnn
@@ -151,7 +152,7 @@ class RNMTPlusEncoder(SequentialEncoder):
           dropout: The probability to drop units in each layer output.
         """
         if cell_class is None:
-            cell_class = tfa.rnn.LayerNormLSTMCell
+            cell_class = LayerNormLSTMCell
         layers = [
             RNNEncoder(
                 1, num_units, bidirectional=True, dropout=0.0, cell_class=cell_class

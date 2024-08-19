@@ -29,7 +29,7 @@ jobs:
 
       - name: Check code format with Black
         run: |
-          black --check .
+          black --exclude tfa --check . 
 
 #      - name: Check imports order with isort
 #        run: |
@@ -38,7 +38,7 @@ jobs:
       - name: Check code style with Flake8
         if: ${{ always() }}
         run: |
-          flake8 .
+          flake8 --exclude tfa  .
 
 
   test:

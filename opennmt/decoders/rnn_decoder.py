@@ -2,11 +2,11 @@
 
 import tensorflow as tf
 
+import opennmt.tfa as tfa
+
 from opennmt.decoders import decoder
 from opennmt.layers import bridge, common, rnn, transformer
 from opennmt.layers.rnn import map_v1_weights_to_cell
-from opennmt.tfa.rnn import LayerNormLSTMCell
-from opennmt.tfa.seq2seq import AttentionWrapper, LuongAttention
 
 
 class RNNDecoder(decoder.Decoder):
@@ -118,7 +118,7 @@ class AttentionalRNNDecoder(RNNDecoder):
             **kwargs,
         )
         if attention_mechanism_class is None:
-            attention_mechanism_class = LuongAttention
+            attention_mechanism_class = tfa.seq2seq.LuongAttention
         self.attention_mechanism = attention_mechanism_class(self.cell.output_size)
 
         def _add_attention(cell):
@@ -126,7 +126,7 @@ class AttentionalRNNDecoder(RNNDecoder):
             attention_layer = common.Dense(
                 cell.output_size, use_bias=False, activation=attention_layer_activation
             )
-            wrapper = AttentionWrapper(
+            wrapper = tfa.seq2seq.AttentionWrapper(
                 cell, self.attention_mechanism, attention_layer=attention_layer
             )
             return wrapper
@@ -179,7 +179,7 @@ class AttentionalRNNDecoder(RNNDecoder):
 
     def map_v1_weights(self, weights):
         if self.first_layer_attention or not isinstance(
-            self.attention_mechanism, LuongAttention
+            self.attention_mechanism, tfa.seq2seq.LuongAttention
         ):
             raise ValueError(
                 "Can only map V1 weights for RNN decoder with Luong attention "
@@ -217,7 +217,7 @@ class RNMTPlusDecoder(decoder.Decoder):
         """
         super().__init__(**kwargs)
         if cell_class is None:
-            cell_class = LayerNormLSTMCell
+            cell_class = tfa.rnn.LayerNormLSTMCell
         self.num_heads = num_heads
         self.num_units = num_units
         self.dropout = dropout

@@ -2,7 +2,6 @@
 
 import numpy as np
 import tensorflow as tf
-import tensorflow_addons as tfa
 from opennmt.tfa.text import crf_decode2, crf_log_likelihood2
 
 from opennmt import inputters

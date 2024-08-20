@@ -1,7 +1,6 @@
 """Standard sequence-to-sequence model."""
 
 import tensorflow as tf
-import tensorflow_addons as tfa
 
 from opennmt import config as config_util
 from opennmt import constants, inputters

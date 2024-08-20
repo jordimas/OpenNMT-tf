@@ -10,6 +10,7 @@ from opennmt.decoders import decoder as decoder_util
 from opennmt.layers import reducer
 from opennmt.models import model
 from opennmt.utils import decoding, losses, misc
+from opennmt.tfa.seq2seq import tile_batch
 
 
 class EmbeddingsSharingLevel:
@@ -283,12 +284,12 @@ class SequenceToSequence(model.SequenceGenerator):
 
         if beam_size > 1:
             # Tile encoder outputs to prepare for beam search.
-            encoder_outputs = tfa.seq2seq.tile_batch(encoder_outputs, beam_size)
-            encoder_sequence_length = tfa.seq2seq.tile_batch(
+            encoder_outputs = tile_batch(encoder_outputs, beam_size)
+            encoder_sequence_length = tile_batch(
                 encoder_sequence_length, beam_size
             )
             encoder_state = tf.nest.map_structure(
-                lambda state: tfa.seq2seq.tile_batch(state, beam_size)
+                lambda state: tile_batch(state, beam_size)
                 if state is not None
                 else None,
                 encoder_state,
@@ -345,8 +346,8 @@ class SequenceToSequence(model.SequenceGenerator):
                 features, ignore_special_tokens=True
             )
             if beam_size > 1:
-                source_tokens = tfa.seq2seq.tile_batch(source_tokens, beam_size)
-                source_length = tfa.seq2seq.tile_batch(source_length, beam_size)
+                source_tokens = tile_batch(source_tokens, beam_size)
+                source_length = tile_batch(source_length, beam_size)
             original_shape = tf.shape(target_tokens)
             if self.tflite_mode:
                 target_tokens = tf.squeeze(target_tokens, axis=0)

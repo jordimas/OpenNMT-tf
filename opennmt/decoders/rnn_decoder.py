@@ -7,7 +7,7 @@ from opennmt.tfa.rnn import LayerNormLSTMCell2
 from opennmt.decoders import decoder
 from opennmt.layers import bridge, common, rnn, transformer
 from opennmt.layers.rnn import map_v1_weights_to_cell
-
+from opennmt.tfa.seq2seq import LuongAttention, AttentionWrapper
 
 class RNNDecoder(decoder.Decoder):
     """A basic RNN decoder."""
@@ -118,7 +118,7 @@ class AttentionalRNNDecoder(RNNDecoder):
             **kwargs,
         )
         if attention_mechanism_class is None:
-            attention_mechanism_class = tfa.seq2seq.LuongAttention
+            attention_mechanism_class = LuongAttention
         self.attention_mechanism = attention_mechanism_class(self.cell.output_size)
 
         def _add_attention(cell):
@@ -126,7 +126,7 @@ class AttentionalRNNDecoder(RNNDecoder):
             attention_layer = common.Dense(
                 cell.output_size, use_bias=False, activation=attention_layer_activation
             )
-            wrapper = tfa.seq2seq.AttentionWrapper(
+            wrapper = AttentionWrapper(
                 cell, self.attention_mechanism, attention_layer=attention_layer
             )
             return wrapper
@@ -179,7 +179,7 @@ class AttentionalRNNDecoder(RNNDecoder):
 
     def map_v1_weights(self, weights):
         if self.first_layer_attention or not isinstance(
-            self.attention_mechanism, tfa.seq2seq.LuongAttention
+            self.attention_mechanism, LuongAttention
         ):
             raise ValueError(
                 "Can only map V1 weights for RNN decoder with Luong attention "

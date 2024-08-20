@@ -9,6 +9,7 @@ from opennmt import constants
 from opennmt.utils import misc
 from opennmt.tfa.seq2seq import tile_batch
 
+
 class Sampler(abc.ABC):
     """Base class for samplers."""
 

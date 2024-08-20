@@ -22,7 +22,8 @@ original Adam algorithm, and may lead to different empirical results.
 
 import importlib
 import tensorflow as tf
-#from tensorflow_addons.utils.types import FloatTensorLike
+
+# from tensorflow_addons.utils.types import FloatTensorLike
 from opennmt.tfa.utils.types import FloatTensorLike
 
 

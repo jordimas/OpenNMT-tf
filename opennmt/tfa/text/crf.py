@@ -17,6 +17,7 @@ import warnings
 import numpy as np
 import tensorflow as tf
 
+
 def _generate_zero_filled_state_for_cell2(cell, inputs, batch_size, dtype):
     if inputs is not None:
         batch_size = tf.shape(inputs)[0]
@@ -41,7 +42,6 @@ def _generate_zero_filled_state2(batch_size_tensor, state_size, dtype):
         return tf.nest.map_structure(create_zeros, state_size)
     else:
         return create_zeros(state_size)
-
 
 
 class AbstractRNNCell2(tf.keras.layers.Layer):

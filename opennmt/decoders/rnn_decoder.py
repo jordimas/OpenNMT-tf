@@ -8,6 +8,7 @@ from opennmt.layers import bridge, common, rnn, transformer
 from opennmt.layers.rnn import map_v1_weights_to_cell
 from opennmt.tfa.seq2seq import LuongAttention, AttentionWrapper
 
+
 class RNNDecoder(decoder.Decoder):
     """A basic RNN decoder."""
 

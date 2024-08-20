@@ -284,9 +284,7 @@ class SequenceToSequence(model.SequenceGenerator):
         if beam_size > 1:
             # Tile encoder outputs to prepare for beam search.
             encoder_outputs = tile_batch(encoder_outputs, beam_size)
-            encoder_sequence_length = tile_batch(
-                encoder_sequence_length, beam_size
-            )
+            encoder_sequence_length = tile_batch(encoder_sequence_length, beam_size)
             encoder_state = tf.nest.map_structure(
                 lambda state: tile_batch(state, beam_size)
                 if state is not None

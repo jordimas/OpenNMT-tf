@@ -12,7 +12,8 @@ from opennmt.models import (
     transformer,
 )
 from opennmt.utils import misc
-from opennmt.tfa.seq2seq import LuongMonotonicAttention, LuongAttention
+from opennmt.tfa.seq2seq import LuongMonotonicAttention
+import opennmt.tfa
 
 _CATALOG_MODELS_REGISTRY = misc.ClassRegistry(base_class=model.Model)
 
@@ -135,7 +136,7 @@ class LuongAttention(_RNNBase):
                 num_layers=4,
                 num_units=1000,
                 bridge_class=layers.CopyBridge,
-                attention_mechanism_class=LuongAttention,
+                attention_mechanism_class=seq2seq.LuongAttention,
                 cell_class=tf.keras.layers.LSTMCell,
                 dropout=0.2,
                 residual_connections=False,
@@ -168,7 +169,7 @@ class NMTBigV1(_RNNBase):
                 num_layers=4,
                 num_units=1024,
                 bridge_class=layers.CopyBridge,
-                attention_mechanism_class=LuongAttention,
+                attention_mechanism_class=seq2seq.LuongAttention,
                 attention_layer_activation=None,
                 cell_class=tf.keras.layers.LSTMCell,
                 dropout=0.3,
@@ -202,7 +203,7 @@ class NMTMediumV1(_RNNBase):
                 num_layers=4,
                 num_units=512,
                 bridge_class=layers.CopyBridge,
-                attention_mechanism_class=LuongAttention,
+                attention_mechanism_class=seq2seq.LuongAttention,
                 attention_layer_activation=None,
                 cell_class=tf.keras.layers.LSTMCell,
                 dropout=0.3,
@@ -234,7 +235,7 @@ class NMTSmallV1(_RNNBase):
                 num_layers=2,
                 num_units=512,
                 bridge_class=layers.CopyBridge,
-                attention_mechanism_class=LuongAttention,
+                attention_mechanism_class=seq2seq.LuongAttention,
                 attention_layer_activation=None,
                 cell_class=tf.keras.layers.LSTMCell,
                 dropout=0.3,

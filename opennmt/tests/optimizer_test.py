@@ -18,8 +18,8 @@ class OptimizerTest(tf.test.TestCase):
         self.assertEqual(lazy_adam.beta_1, 0.8)
 
     def testMakeAdamW(self):
-        adam_w = utils.make_optimizer("AdamW", 0.002, weight_decay=0.1)
-        self.assertIsInstance(adam_w, tfa.optimizers.AdamW)
+        adam_w = utils.make_optimizer("AdamW2", 0.002, weight_decay=0.1)
+        self.assertIsInstance(adam_w, tfa.optimizers.AdamW2)
         adam_w = utils.make_optimizer("Adam", 0.002, weight_decay=0.1)
         self.assertIsInstance(adam_w, utils.get_optimizer_class("Adam"))
         self.assertIsInstance(adam_w, DecoupledWeightDecayExtension2)

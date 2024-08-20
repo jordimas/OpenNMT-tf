@@ -31,7 +31,7 @@ jobs:
         run: |
           black --exclude tfa --check . 
 
-#      - name: Check imports order with isort
+#      - name: Check imports order with isort 
 #        run: |
 #          isort --check-only .
 #

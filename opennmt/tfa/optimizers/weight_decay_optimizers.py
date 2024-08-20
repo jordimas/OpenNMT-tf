@@ -27,7 +27,7 @@ from typeguard import typechecked
 from typing import Union, Callable, Type, Optional, List
 
 
-class DecoupledWeightDecayExtension2:
+class DecoupledWeightDecayExtension:
     """This class allows to extend optimizers with decoupled weight decay.
 
     It implements the decoupled weight decay described by [Loshchilov & Hutter]
@@ -50,7 +50,7 @@ class DecoupledWeightDecayExtension2:
     weight decay inherits from, e.g.
 
     ```python
-    class AdamW(DecoupledWeightDecayExtension2, tf.keras.optimizers.Adam):
+    class AdamW(DecoupledWeightDecayExtension, tf.keras.optimizers.Adam):
       def __init__(self, weight_decay, *args, **kwargs):
         super(AdamW, self).__init__(weight_decay, *args, **kwargs).
     ```
@@ -221,7 +221,7 @@ class DecoupledWeightDecayExtension2:
         return tf.no_op()
 
     def _prepare_local(self, var_device, var_dtype, apply_state):
-        super(DecoupledWeightDecayExtension2, self)._prepare_local(
+        super(DecoupledWeightDecayExtension, self)._prepare_local(
             var_device, var_dtype, apply_state
         )
 
@@ -341,12 +341,12 @@ def extend_with_decoupled_weight_decay2(
             tf.optimizers.Optimizer.
 
     Returns:
-        A new optimizer class that inherits from DecoupledWeightDecayExtension2
+        A new optimizer class that inherits from DecoupledWeightDecayExtension
         and base_optimizer.
     """
 
     class OptimizerWithDecoupledWeightDecay2(
-        DecoupledWeightDecayExtension2, base_optimizer
+        DecoupledWeightDecayExtension, base_optimizer
     ):
         """Base_optimizer with decoupled weight decay.
 
@@ -384,7 +384,7 @@ else:
 
 
 @tf.keras.utils.register_keras_serializable(package="Addons")
-class SGDW2(DecoupledWeightDecayExtension2, SGD_CLASS):
+class SGDW2(DecoupledWeightDecayExtension, SGD_CLASS):
     """Optimizer that implements the Momentum algorithm with weight_decay.
 
     This is an implementation of the SGDW optimizer described in "Decoupled
@@ -463,7 +463,7 @@ class SGDW2(DecoupledWeightDecayExtension2, SGD_CLASS):
 
 
 @tf.keras.utils.register_keras_serializable(package="Addons")
-class AdamW2(DecoupledWeightDecayExtension2, ADAM_CLASS):
+class AdamW2(DecoupledWeightDecayExtension, ADAM_CLASS):
     """Optimizer that implements the Adam algorithm with weight decay.
 
     This is an implementation of the AdamW optimizer described in "Decoupled

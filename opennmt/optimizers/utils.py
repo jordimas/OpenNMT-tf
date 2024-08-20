@@ -7,7 +7,7 @@ import opennmt.tfa as tfa
 
 from packaging.version import Version
 from opennmt.tfa.optimizers.weight_decay_optimizers import (
-    DecoupledWeightDecayExtension2,
+    DecoupledWeightDecayExtension,
 )
 
 from opennmt.utils import misc
@@ -66,7 +66,7 @@ def make_optimizer(name, learning_rate, **kwargs):
     """
     optimizer_class = get_optimizer_class(name)
     if "weight_decay" in kwargs:
-        if DecoupledWeightDecayExtension2 not in inspect.getmro(optimizer_class):
+        if DecoupledWeightDecayExtension not in inspect.getmro(optimizer_class):
             optimizer_class = tfa.optimizers.extend_with_decoupled_weight_decay2(
                 optimizer_class
             )

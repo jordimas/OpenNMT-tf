@@ -3,7 +3,7 @@ import tensorflow as tf
 import opennmt.tfa as tfa
 
 from opennmt.tfa.optimizers.weight_decay_optimizers import (
-    DecoupledWeightDecayExtension2,
+    DecoupledWeightDecayExtension,
 )
 
 from opennmt.optimizers import utils
@@ -22,7 +22,7 @@ class OptimizerTest(tf.test.TestCase):
         self.assertIsInstance(adam_w, tfa.optimizers.AdamW2)
         adam_w = utils.make_optimizer("Adam", 0.002, weight_decay=0.1)
         self.assertIsInstance(adam_w, utils.get_optimizer_class("Adam"))
-        self.assertIsInstance(adam_w, DecoupledWeightDecayExtension2)
+        self.assertIsInstance(adam_w, DecoupledWeightDecayExtension)
 
     def testCustomOptimizerRegistration(self):
         @utils.register_optimizer

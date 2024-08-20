@@ -4,9 +4,9 @@ import abc
 import collections
 
 import tensorflow as tf
+import opennmt.tfa as tfa
 
 from opennmt import constants
-from opennmt.tfa.seq2seq import tile_batch
 from opennmt.utils import misc
 
 
@@ -258,7 +258,7 @@ class BeamSearch(DecodingStrategy):
 
     def initialize(self, start_ids, attention_size=None):
         batch_size = tf.shape(start_ids)[0]
-        start_ids = tile_batch(start_ids, self.beam_size)
+        start_ids = tfa.seq2seq.tile_batch(start_ids, self.beam_size)
         finished = tf.zeros([batch_size * self.beam_size], dtype=tf.bool)
         # Give all probability to first beam for the first iteration.
         initial_log_probs = tf.tile(

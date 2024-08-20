@@ -215,7 +215,7 @@ class ConfigTest(tf.test.TestCase):
                         "target_vocabulary": "b.txt",
                     },
                     "params": {
-                        "optimizer": "LazyAdam",
+                        "optimizer": "LazyAdam2",
                         "optimizer_params": {
                             "beta_1": 0.9,
                             "beta_2": 0.998,

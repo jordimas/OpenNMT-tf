@@ -1,8 +1,9 @@
 import tensorflow as tf
-import tensorflow_addons as tfa
+#import tensorflow_addons as tfa
+import opennmt.tfa as tfa
 
-from tensorflow_addons.optimizers.weight_decay_optimizers import (
-    DecoupledWeightDecayExtension,
+from opennmt.tfa.optimizers.weight_decay_optimizers import (
+    DecoupledWeightDecayExtension2,
 )
 
 from opennmt.optimizers import utils
@@ -11,8 +12,8 @@ from opennmt.tests import test_util
 
 class OptimizerTest(tf.test.TestCase):
     def testMakeLazyAdam(self):
-        lazy_adam = utils.make_optimizer("LazyAdam", 0.002, beta_1=0.8)
-        self.assertIsInstance(lazy_adam, tfa.optimizers.LazyAdam)
+        lazy_adam = utils.make_optimizer("LazyAdam2", 0.002, beta_1=0.8)
+        self.assertIsInstance(lazy_adam, opennmt.tfa.optimizers.LazyAdam)
         self.assertEqual(lazy_adam.learning_rate, 0.002)
         self.assertEqual(lazy_adam.beta_1, 0.8)
 
@@ -21,7 +22,7 @@ class OptimizerTest(tf.test.TestCase):
         self.assertIsInstance(adam_w, tfa.optimizers.AdamW)
         adam_w = utils.make_optimizer("Adam", 0.002, weight_decay=0.1)
         self.assertIsInstance(adam_w, utils.get_optimizer_class("Adam"))
-        self.assertIsInstance(adam_w, DecoupledWeightDecayExtension)
+        self.assertIsInstance(adam_w, DecoupledWeightDecayExtension2)
 
     def testCustomOptimizerRegistration(self):
         @utils.register_optimizer

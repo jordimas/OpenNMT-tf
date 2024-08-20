@@ -272,9 +272,9 @@ def _convert_to_v2_params(config):
 
 # Only covering the most common optimizers.
 _V1_OPTIMIZER_MAP = {
-    "AdamOptimizer": "Adam",
-    "GradientDescentOptimizer": "SGD",
-    "LazyAdamOptimizer": "LazyAdam",
+    "AdamOptimizer": "Adam2",
+    "GradientDescentOptimizer": "SGD2",
+    "LazyAdamOptimizer": "LazyAdam2",
 }
 
 

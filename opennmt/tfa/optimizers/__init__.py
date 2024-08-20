@@ -1,0 +1,2 @@
+from opennmt.tfa.optimizers.lazy_adam import LazyAdam2
+from opennmt.tfa.optimizers.weight_decay_optimizers import DecoupledWeightDecayExtension2

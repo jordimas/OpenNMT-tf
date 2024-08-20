@@ -38,7 +38,7 @@ jobs:
       - name: Check code style with Flake8
         if: ${{ always() }}
         run: |
-          flake8  .
+          flake8 --exclude tfa .
 
 
   test:

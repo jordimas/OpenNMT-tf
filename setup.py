@@ -75,7 +75,7 @@ setup(
         "pyyaml>=5.3,<7",
         "rouge>=1.0,<2",
         "sacrebleu>=1.5.0,<3",
-        "typeguard"
+        "typeguard",
     ],
     extras_require={
         "tensorflow": [

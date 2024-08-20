@@ -131,8 +131,6 @@ class AbstractRNNCell2(tf.keras.layers.Layer):
         return _generate_zero_filled_state_for_cell2(self, inputs, batch_size, dtype)
 
 
-#from tensorflow_addons.rnn.abstract_rnn_cell import AbstractRNNCell
-#from tensorflow_addons.utils.types import  TensorLike
 from opennmt.tfa.utils.types import TensorLike
 
 from typeguard import typechecked

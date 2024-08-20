@@ -637,7 +637,7 @@ def crf_decode_backward2(inputs: TensorLike, state: TensorLike) -> tf.Tensor:
     return tf.transpose(tf.scan(_scan_fn, inputs, state), [1, 0, 2])
 
 
-def crf_decode2(
+def crf_decode(
     potentials: TensorLike, transition_params: TensorLike, sequence_length: TensorLike
 ) -> tf.Tensor:
     """Decode the highest scoring sequence of tags.

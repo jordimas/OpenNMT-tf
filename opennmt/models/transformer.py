@@ -154,7 +154,7 @@ class Transformer(SequenceToSequence):
                 "params": {
                     "average_loss_in_time": True,
                     "label_smoothing": 0.1,
-                    "optimizer": "LazyAdam2",
+                    "optimizer": "LazyAdam",
                     "optimizer_params": {"beta_1": 0.9, "beta_2": 0.998},
                     "learning_rate": 2.0,
                     "decay_type": "NoamDecay",

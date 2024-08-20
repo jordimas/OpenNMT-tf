@@ -67,7 +67,7 @@ def make_optimizer(name, learning_rate, **kwargs):
     optimizer_class = get_optimizer_class(name)
     if "weight_decay" in kwargs:
         if DecoupledWeightDecayExtension not in inspect.getmro(optimizer_class):
-            optimizer_class = tfa.optimizers.extend_with_decoupled_weight_decay2(
+            optimizer_class = tfa.optimizers.extend_with_decoupled_weight_decay(
                 optimizer_class
             )
     optimizer = optimizer_class(learning_rate=learning_rate, **kwargs)

@@ -38,7 +38,7 @@ else:
 
 
 @tf.keras.utils.register_keras_serializable(package="Addons")
-class LazyAdam2(adam_optimizer_class):
+class LazyAdam(adam_optimizer_class):
     """Variant of the Adam optimizer that handles sparse updates more
     efficiently.
 
@@ -64,7 +64,7 @@ class LazyAdam2(adam_optimizer_class):
         beta_2: FloatTensorLike = 0.999,
         epsilon: FloatTensorLike = 1e-7,
         amsgrad: bool = False,
-        name: str = "LazyAdam2",
+        name: str = "LazyAdam",
         **kwargs,
     ):
         """Constructs a new LazyAdam optimizer.

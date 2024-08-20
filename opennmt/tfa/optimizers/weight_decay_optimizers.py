@@ -43,7 +43,7 @@ class DecoupledWeightDecayExtension:
     optimizers with decoupled weight decay. We explicitly define the two
     examples used in the above paper (SGDW and AdamW), but in general this can
     extend any OptimizerX class by using
-        `ExtendedCls = extend_with_decoupled_weight_decay2(OptimizerX)`.
+        `ExtendedCls = extend_with_decoupled_weight_decay(OptimizerX)`.
     Weight decay can then be set when instantiating the optimizer:
         `optimizerX = ExtendedCls(weight_decay=0.001, learning_rate=0.001)`.
     In order for it to work, it must be the first class the Optimizer with
@@ -281,7 +281,7 @@ else:
 
 
 @typechecked
-def extend_with_decoupled_weight_decay2(
+def extend_with_decoupled_weight_decay(
     base_optimizer: Type[keras_legacy_optimizer],
 ) -> Type[keras_legacy_optimizer]:
     """Factory function returning an optimizer class with decoupled weight
@@ -290,7 +290,7 @@ def extend_with_decoupled_weight_decay2(
     Returns an optimizer class. An instance of the returned class computes the
     update step of `base_optimizer` and additionally decays the weights.
     E.g., the class returned by
-    `extend_with_decoupled_weight_decay2(tf.keras.optimizers.Adam)` is
+    `extend_with_decoupled_weight_decay(tf.keras.optimizers.Adam)` is
     equivalent to `tfa.optimizers.AdamW`.
 
     The API of the new optimizer class slightly differs from the API of the
@@ -307,7 +307,7 @@ def extend_with_decoupled_weight_decay2(
     Usage example:
     ```python
     # MyAdamW is a new class
-    MyAdamW = extend_with_decoupled_weight_decay2(tf.keras.optimizers.Adam)
+    MyAdamW = extend_with_decoupled_weight_decay(tf.keras.optimizers.Adam)
     # Create a MyAdamW object
     optimizer = MyAdamW(weight_decay=0.001, learning_rate=0.001)
     # update var1, var2 but only decay var1
@@ -345,7 +345,7 @@ def extend_with_decoupled_weight_decay2(
         and base_optimizer.
     """
 
-    class OptimizerWithDecoupledWeightDecay2(
+    class OptimizerWithDecoupledWeightDecay(
         DecoupledWeightDecayExtension, base_optimizer
     ):
         """Base_optimizer with decoupled weight decay.
@@ -372,7 +372,7 @@ def extend_with_decoupled_weight_decay2(
             # super delegation is necessary here
             super().__init__(weight_decay, *args, **kwargs)
 
-    return OptimizerWithDecoupledWeightDecay2
+    return OptimizerWithDecoupledWeightDecay
 
 
 if hasattr(tf.keras.optimizers, "legacy"):
@@ -384,7 +384,7 @@ else:
 
 
 @tf.keras.utils.register_keras_serializable(package="Addons")
-class SGDW2(DecoupledWeightDecayExtension, SGD_CLASS):
+class SGDW(DecoupledWeightDecayExtension, SGD_CLASS):
     """Optimizer that implements the Momentum algorithm with weight_decay.
 
     This is an implementation of the SGDW optimizer described in "Decoupled
@@ -400,7 +400,7 @@ class SGDW2(DecoupledWeightDecayExtension, SGD_CLASS):
 
     This optimizer can also be instantiated as
     ```python
-    extend_with_decoupled_weight_decay2(tf.keras.optimizers.SGD,
+    extend_with_decoupled_weight_decay(tf.keras.optimizers.SGD,
                                        weight_decay=weight_decay)
     ```
 
@@ -429,7 +429,7 @@ class SGDW2(DecoupledWeightDecayExtension, SGD_CLASS):
         learning_rate: Union[FloatTensorLike, Callable] = 0.001,
         momentum: Union[FloatTensorLike, Callable] = 0.0,
         nesterov: bool = False,
-        name: str = "SGDW2",
+        name: str = "SGDW",
         **kwargs,
     ):
         """Construct a new SGDW optimizer.
@@ -463,7 +463,7 @@ class SGDW2(DecoupledWeightDecayExtension, SGD_CLASS):
 
 
 @tf.keras.utils.register_keras_serializable(package="Addons")
-class AdamW2(DecoupledWeightDecayExtension, ADAM_CLASS):
+class AdamW(DecoupledWeightDecayExtension, ADAM_CLASS):
     """Optimizer that implements the Adam algorithm with weight decay.
 
     This is an implementation of the AdamW optimizer described in "Decoupled
@@ -480,7 +480,7 @@ class AdamW2(DecoupledWeightDecayExtension, ADAM_CLASS):
 
     This optimizer can also be instantiated as
     ```python
-    extend_with_decoupled_weight_decay2(tf.keras.optimizers.Adam,
+    extend_with_decoupled_weight_decay(tf.keras.optimizers.Adam,
                                        weight_decay=weight_decay)
     ```
 
@@ -510,7 +510,7 @@ class AdamW2(DecoupledWeightDecayExtension, ADAM_CLASS):
         beta_2: Union[FloatTensorLike, Callable] = 0.999,
         epsilon: FloatTensorLike = 1e-07,
         amsgrad: bool = False,
-        name: str = "AdamW2",
+        name: str = "AdamW",
         **kwargs,
     ):
         """Construct a new AdamW optimizer.

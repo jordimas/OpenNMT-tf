@@ -1,5 +1,6 @@
 import tensorflow as tf
-#import tensorflow_addons as tfa
+
+# import tensorflow_addons as tfa
 import opennmt.tfa as tfa
 
 from opennmt.tfa.optimizers.weight_decay_optimizers import (

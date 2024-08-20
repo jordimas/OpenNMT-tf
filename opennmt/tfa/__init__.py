@@ -19,4 +19,3 @@ from opennmt.tfa import seq2seq
 from opennmt.tfa import text
 from opennmt.tfa import options
 from opennmt.tfa.utils import types
-

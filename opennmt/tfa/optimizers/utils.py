@@ -64,7 +64,7 @@ def get_variable_name(variable) -> str:
     return param_name
 
 
-def is_variable_matched_by_regexes2(variable, regexes: List[str]) -> bool:
+def is_variable_matched_by_regexes(variable, regexes: List[str]) -> bool:
     """Whether variable is matched in regexes list by its name."""
     if regexes:
         # var_name = get_variable_name(variable)

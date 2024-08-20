@@ -17,11 +17,9 @@
 import importlib
 import tensorflow as tf
 
-# from tensorflow_addons.utils.types import FloatTensorLike
 from opennmt.tfa.utils.types import FloatTensorLike
 
-# from tensorflow_addons.optimizers.utils import is_variable_matched_by_regexes
-from opennmt.tfa.optimizers.utils import is_variable_matched_by_regexes2
+from opennmt.tfa.optimizers.utils import is_variable_matched_by_regexes
 
 from typeguard import typechecked
 from typing import Union, Callable, Type, Optional, List

@@ -13,7 +13,7 @@ from opennmt.tests import test_util
 class OptimizerTest(tf.test.TestCase):
     def testMakeLazyAdam(self):
         lazy_adam = utils.make_optimizer("LazyAdam2", 0.002, beta_1=0.8)
-        self.assertIsInstance(lazy_adam, tfa.optimizers.LazyAdam)
+        self.assertIsInstance(lazy_adam, tfa.optimizers.LazyAdam2)
         self.assertEqual(lazy_adam.learning_rate, 0.002)
         self.assertEqual(lazy_adam.beta_1, 0.8)
 

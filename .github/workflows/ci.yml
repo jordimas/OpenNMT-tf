@@ -29,7 +29,7 @@ jobs:
 
       - name: Check code format with Black
         run: |
-          black --exclude tfa --check . 
+          black --check .
 
 #      - name: Check imports order with isort 
 #        run: |

@@ -14,9 +14,10 @@
 # ==============================================================================
 """Types for typing functions signatures."""
 
-from typing import Union, Callable, List
-
 import importlib
+
+from typing import Callable, List, Union
+
 import numpy as np
 import tensorflow as tf
 

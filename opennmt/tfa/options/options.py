@@ -1,7 +1,7 @@
 import os
 import platform
-import warnings
 import traceback
+import warnings
 
 try:
     _TF_ADDONS_PY_OPS = bool(int(os.environ["TF_ADDONS_PY_OPS"]))

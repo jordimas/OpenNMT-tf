@@ -17,25 +17,24 @@
 import collections
 import functools
 import math
-from packaging.version import Version
+
+from typing import Callable, List, Optional, Union
 
 import numpy as np
-
 import tensorflow as tf
+
+from packaging.version import Version
+from typeguard import typechecked
 
 from opennmt.tfa.rnn.abstract_rnn_cell import AbstractRNNCell
 from opennmt.tfa.utils import keras_utils
 from opennmt.tfa.utils.types import (
     AcceptableDTypes,
     FloatTensorLike,
-    TensorLike,
     Initializer,
     Number,
+    TensorLike,
 )
-
-from typeguard import typechecked
-from typing import Optional, Callable, Union, List
-
 
 if Version(tf.__version__) < Version("2.13"):
     SERIALIZATION_ARGS = {}

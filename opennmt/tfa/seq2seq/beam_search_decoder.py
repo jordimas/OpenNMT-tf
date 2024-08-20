@@ -15,19 +15,19 @@
 """A decoder that performs beam search."""
 
 import collections
-import numpy as np
 
+from typing import Callable, Optional
+
+import numpy as np
 import tensorflow as tf
 
+from typeguard import typechecked
+
 from opennmt.tfa import options
-from opennmt.tfa.seq2seq import attention_wrapper
-from opennmt.tfa.seq2seq import decoder
+from opennmt.tfa.seq2seq import attention_wrapper, decoder
 from opennmt.tfa.utils import keras_utils
 from opennmt.tfa.utils.resource_loader import LazySO
-from opennmt.tfa.utils.types import FloatTensorLike, TensorLike, Number
-
-from typeguard import typechecked
-from typing import Callable, Optional
+from opennmt.tfa.utils.types import FloatTensorLike, Number, TensorLike
 
 _beam_search_so = LazySO("custom_ops/seq2seq/_beam_search_ops.so")
 

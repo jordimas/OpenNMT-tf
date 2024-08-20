@@ -14,40 +14,37 @@
 # ==============================================================================
 """Additional layers for sequence to sequence models."""
 
-from opennmt.tfa.seq2seq.attention_wrapper import AttentionMechanism
-from opennmt.tfa.seq2seq.attention_wrapper import AttentionWrapper
-from opennmt.tfa.seq2seq.attention_wrapper import AttentionWrapperState
-from opennmt.tfa.seq2seq.attention_wrapper import BahdanauAttention
-from opennmt.tfa.seq2seq.attention_wrapper import BahdanauMonotonicAttention
-from opennmt.tfa.seq2seq.attention_wrapper import LuongAttention
-from opennmt.tfa.seq2seq.attention_wrapper import LuongMonotonicAttention
-from opennmt.tfa.seq2seq.attention_wrapper import hardmax
-from opennmt.tfa.seq2seq.attention_wrapper import monotonic_attention
-from opennmt.tfa.seq2seq.attention_wrapper import safe_cumprod
-
-from opennmt.tfa.seq2seq.basic_decoder import BasicDecoder
-from opennmt.tfa.seq2seq.basic_decoder import BasicDecoderOutput
-
-from opennmt.tfa.seq2seq.beam_search_decoder import BeamSearchDecoder
-from opennmt.tfa.seq2seq.beam_search_decoder import BeamSearchDecoderOutput
-from opennmt.tfa.seq2seq.beam_search_decoder import BeamSearchDecoderState
-from opennmt.tfa.seq2seq.beam_search_decoder import FinalBeamSearchDecoderOutput
-from opennmt.tfa.seq2seq.beam_search_decoder import gather_tree
-from opennmt.tfa.seq2seq.beam_search_decoder import gather_tree_from_array
-from opennmt.tfa.seq2seq.beam_search_decoder import tile_batch
-
-from opennmt.tfa.seq2seq.decoder import BaseDecoder
-from opennmt.tfa.seq2seq.decoder import Decoder
-from opennmt.tfa.seq2seq.decoder import dynamic_decode
-
-from opennmt.tfa.seq2seq.loss import SequenceLoss
-from opennmt.tfa.seq2seq.loss import sequence_loss
-
-from opennmt.tfa.seq2seq.sampler import CustomSampler
-from opennmt.tfa.seq2seq.sampler import GreedyEmbeddingSampler
-from opennmt.tfa.seq2seq.sampler import InferenceSampler
-from opennmt.tfa.seq2seq.sampler import SampleEmbeddingSampler
-from opennmt.tfa.seq2seq.sampler import Sampler
-from opennmt.tfa.seq2seq.sampler import ScheduledEmbeddingTrainingSampler
-from opennmt.tfa.seq2seq.sampler import ScheduledOutputTrainingSampler
-from opennmt.tfa.seq2seq.sampler import TrainingSampler
+from opennmt.tfa.seq2seq.attention_wrapper import (
+    AttentionMechanism,
+    AttentionWrapper,
+    AttentionWrapperState,
+    BahdanauAttention,
+    BahdanauMonotonicAttention,
+    LuongAttention,
+    LuongMonotonicAttention,
+    hardmax,
+    monotonic_attention,
+    safe_cumprod,
+)
+from opennmt.tfa.seq2seq.basic_decoder import BasicDecoder, BasicDecoderOutput
+from opennmt.tfa.seq2seq.beam_search_decoder import (
+    BeamSearchDecoder,
+    BeamSearchDecoderOutput,
+    BeamSearchDecoderState,
+    FinalBeamSearchDecoderOutput,
+    gather_tree,
+    gather_tree_from_array,
+    tile_batch,
+)
+from opennmt.tfa.seq2seq.decoder import BaseDecoder, Decoder, dynamic_decode
+from opennmt.tfa.seq2seq.loss import SequenceLoss, sequence_loss
+from opennmt.tfa.seq2seq.sampler import (
+    CustomSampler,
+    GreedyEmbeddingSampler,
+    InferenceSampler,
+    SampleEmbeddingSampler,
+    Sampler,
+    ScheduledEmbeddingTrainingSampler,
+    ScheduledOutputTrainingSampler,
+    TrainingSampler,
+)

@@ -14,11 +14,13 @@
 # ==============================================================================
 """Loss functions for sequence models."""
 
+from typing import Callable, Optional
+
 import tensorflow as tf
-from opennmt.tfa.utils.types import TensorLike
 
 from typeguard import typechecked
-from typing import Callable, Optional
+
+from opennmt.tfa.utils.types import TensorLike
 
 
 def sequence_loss(

@@ -15,8 +15,10 @@
 """Additional Utilities used for tfa.optimizers."""
 
 import re
-import tensorflow as tf
+
 from typing import List
+
+import tensorflow as tf
 
 
 def fit_bn(model, *args, **kwargs):

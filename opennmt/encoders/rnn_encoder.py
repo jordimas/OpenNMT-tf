@@ -1,11 +1,11 @@
 """Define RNN-based encoders."""
 
 import tensorflow as tf
-from opennmt.tfa.rnn import LayerNormLSTMCell
 
 from opennmt.encoders.encoder import Encoder, SequentialEncoder
 from opennmt.layers import common, rnn
 from opennmt.layers.reducer import ConcatReducer, JoinReducer, pad_in_time
+from opennmt.tfa.rnn import LayerNormLSTMCell
 
 
 class _RNNEncoderBase(Encoder):

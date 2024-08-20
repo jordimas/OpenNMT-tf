@@ -21,15 +21,15 @@ original Adam algorithm, and may lead to different empirical results.
 """
 
 import importlib
+
+from typing import Callable, Union
+
 import tensorflow as tf
+
+from typeguard import typechecked
 
 # from tensorflow_addons.utils.types import FloatTensorLike
 from opennmt.tfa.utils.types import FloatTensorLike
-
-
-from typeguard import typechecked
-from typing import Union, Callable
-
 
 if importlib.util.find_spec("tensorflow.keras.optimizers.legacy") is not None:
     adam_optimizer_class = tf.keras.optimizers.legacy.Adam

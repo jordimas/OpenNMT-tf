@@ -16,14 +16,15 @@
 
 import collections
 
+from typing import Optional
+
 import tensorflow as tf
+
+from typeguard import typechecked
 
 from opennmt.tfa.seq2seq import decoder
 from opennmt.tfa.seq2seq import sampler as sampler_py
 from opennmt.tfa.utils import keras_utils
-
-from typeguard import typechecked
-from typing import Optional
 
 
 class BasicDecoderOutput(

@@ -16,12 +16,15 @@
 
 import abc
 
-import tensorflow as tf
-from opennmt.tfa.seq2seq import decoder
-from opennmt.tfa.utils.types import Initializer, TensorLike
-from typeguard import typechecked
 from typing import Callable, Optional
+
+import tensorflow as tf
+
+from typeguard import typechecked
+
+from opennmt.tfa.seq2seq import decoder
 from opennmt.tfa.utils import types
+from opennmt.tfa.utils.types import Initializer, TensorLike
 
 _transpose_batch_time = decoder._transpose_batch_time
 

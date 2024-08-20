@@ -131,10 +131,11 @@ class AbstractRNNCell2(tf.keras.layers.Layer):
         return _generate_zero_filled_state_for_cell2(self, inputs, batch_size, dtype)
 
 
-from opennmt.tfa.utils.types import TensorLike
+from typing import Optional, Tuple
 
 from typeguard import typechecked
-from typing import Optional, Tuple
+
+from opennmt.tfa.utils.types import TensorLike
 
 # TODO: Wrap functions in @tf.function once
 # https://github.com/tensorflow/tensorflow/issues/29075 is resolved

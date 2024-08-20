@@ -2,12 +2,9 @@ import tensorflow as tf
 
 import opennmt.tfa as tfa
 
-from opennmt.tfa.optimizers.weight_decay_optimizers import (
-    DecoupledWeightDecayExtension,
-)
-
 from opennmt.optimizers import utils
 from opennmt.tests import test_util
+from opennmt.tfa.optimizers.weight_decay_optimizers import DecoupledWeightDecayExtension
 
 
 class OptimizerTest(tf.test.TestCase):

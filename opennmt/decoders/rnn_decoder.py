@@ -1,12 +1,12 @@
 """Define RNN-based decoders."""
 
 import tensorflow as tf
-from opennmt.tfa.rnn import LayerNormLSTMCell
 
 from opennmt.decoders import decoder
 from opennmt.layers import bridge, common, rnn, transformer
 from opennmt.layers.rnn import map_v1_weights_to_cell
-from opennmt.tfa.seq2seq import LuongAttention, AttentionWrapper
+from opennmt.tfa.rnn import LayerNormLSTMCell
+from opennmt.tfa.seq2seq import AttentionWrapper, LuongAttention
 
 
 class RNNDecoder(decoder.Decoder):

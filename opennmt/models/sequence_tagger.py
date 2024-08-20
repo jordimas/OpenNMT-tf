@@ -2,10 +2,10 @@
 
 import numpy as np
 import tensorflow as tf
-from opennmt.tfa.text import crf_decode, crf_log_likelihood
 
 from opennmt import inputters
 from opennmt.models.model import Model
+from opennmt.tfa.text import crf_decode, crf_log_likelihood
 from opennmt.utils.losses import cross_entropy_sequence_loss
 
 

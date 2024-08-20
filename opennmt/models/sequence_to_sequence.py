@@ -8,8 +8,8 @@ from opennmt.data import noise, text, vocab
 from opennmt.decoders import decoder as decoder_util
 from opennmt.layers import reducer
 from opennmt.models import model
-from opennmt.utils import decoding, losses, misc
 from opennmt.tfa.seq2seq import tile_batch
+from opennmt.utils import decoding, losses, misc
 
 
 class EmbeddingsSharingLevel:

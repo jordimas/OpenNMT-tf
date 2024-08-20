@@ -15,14 +15,15 @@
 """Base class to make optimizers weight decay ready."""
 
 import importlib
+
+from typing import Callable, List, Optional, Type, Union
+
 import tensorflow as tf
 
-from opennmt.tfa.utils.types import FloatTensorLike
+from typeguard import typechecked
 
 from opennmt.tfa.optimizers.utils import is_variable_matched_by_regexes
-
-from typeguard import typechecked
-from typing import Union, Callable, Type, Optional, List
+from opennmt.tfa.utils.types import FloatTensorLike
 
 
 class DecoupledWeightDecayExtension:

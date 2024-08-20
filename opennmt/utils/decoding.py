@@ -6,8 +6,8 @@ import collections
 import tensorflow as tf
 
 from opennmt import constants
-from opennmt.utils import misc
 from opennmt.tfa.seq2seq import tile_batch
+from opennmt.utils import misc
 
 
 class Sampler(abc.ABC):

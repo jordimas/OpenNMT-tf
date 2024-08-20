@@ -14,11 +14,12 @@
 # ==============================================================================
 """Utilities similar to tf.python.platform.resource_loader."""
 
-from packaging.version import Version
 import os
 import warnings
 
 import tensorflow as tf
+
+from packaging.version import Version
 
 INCLUSIVE_MIN_TF_VERSION_FOR_ABI_COMPATIBILITY = "2.15.0"
 EXCLUSIVE_MAX_TF_VERSION_FOR_ABI_COMPATIBILITY = "2.16.0"

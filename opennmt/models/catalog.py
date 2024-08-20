@@ -2,6 +2,8 @@
 
 import tensorflow as tf
 
+import opennmt.tfa as tfa
+
 from opennmt import config as config_util
 from opennmt import decoders, encoders, inputters, layers
 from opennmt.models import (
@@ -11,9 +13,8 @@ from opennmt.models import (
     sequence_to_sequence,
     transformer,
 )
-from opennmt.utils import misc
 from opennmt.tfa.seq2seq import LuongMonotonicAttention
-import opennmt.tfa as tfa
+from opennmt.utils import misc
 
 _CATALOG_MODELS_REGISTRY = misc.ClassRegistry(base_class=model.Model)
 

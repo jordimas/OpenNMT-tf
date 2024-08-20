@@ -16,13 +16,15 @@
 
 import abc
 
-import tensorflow as tf
-from opennmt.tfa.utils.types import TensorLike
-from typeguard import typechecked
 from typing import Any, Optional, Tuple, Union
+
+import tensorflow as tf
 
 # TODO: Find public API alternatives to these
 from tensorflow.python.ops import control_flow_util
+from typeguard import typechecked
+
+from opennmt.tfa.utils.types import TensorLike
 
 
 class Decoder(metaclass=abc.ABCMeta):

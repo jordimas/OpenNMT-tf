@@ -16,15 +16,16 @@
 
 import tensorflow as tf
 import tensorflow.keras as keras
+
 from typeguard import typechecked
 
 from opennmt.tfa.utils.types import (
     Activation,
-    FloatTensorLike,
-    TensorLike,
-    Initializer,
     Constraint,
+    FloatTensorLike,
+    Initializer,
     Regularizer,
+    TensorLike,
 )
 
 

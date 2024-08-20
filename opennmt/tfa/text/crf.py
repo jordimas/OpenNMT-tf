@@ -316,7 +316,7 @@ def crf_log_norm(
     return tf.cond(tf.equal(tf.shape(inputs)[1], 1), _single_seq_fn, _multi_seq_fn)
 
 
-def crf_log_likelihood2(
+def crf_log_likelihood(
     inputs: TensorLike,
     tag_indices: TensorLike,
     sequence_lengths: TensorLike,
@@ -582,7 +582,7 @@ class CrfDecodeForwardRnnCell(AbstractRNNCell2):
         return cls(**config)
 
 
-def crf_decode_forward2(
+def crf_decode_forward(
     inputs: TensorLike,
     state: TensorLike,
     transition_params: TensorLike,
@@ -678,7 +678,7 @@ def crf_decode(
             tf.constant(0, dtype=tf.int32), sequence_length - 1
         )
 
-        backpointers, last_score = crf_decode_forward2(
+        backpointers, last_score = crf_decode_forward(
             inputs, initial_state, transition_params, sequence_length_less_one
         )
 

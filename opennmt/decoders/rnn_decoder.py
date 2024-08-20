@@ -1,7 +1,6 @@
 """Define RNN-based decoders."""
 
 import tensorflow as tf
-import tensorflow_addons as tfa
 from opennmt.tfa.rnn import LayerNormLSTMCell2
 
 from opennmt.decoders import decoder

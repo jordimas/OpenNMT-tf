@@ -7,7 +7,6 @@ from opennmt.layers import common, rnn
 from opennmt.layers.reducer import ConcatReducer, JoinReducer, pad_in_time
 
 
-
 class _RNNEncoderBase(Encoder):
     """Base class for RNN encoders."""
 

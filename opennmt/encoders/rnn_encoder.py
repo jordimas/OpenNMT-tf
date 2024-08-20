@@ -1,7 +1,9 @@
 """Define RNN-based encoders."""
 
 import tensorflow as tf
+
 import opennmt.tfa as tfa
+
 from opennmt.encoders.encoder import Encoder, SequentialEncoder
 from opennmt.layers import common, rnn
 from opennmt.layers.reducer import ConcatReducer, JoinReducer, pad_in_time

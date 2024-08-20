@@ -4,6 +4,7 @@ import abc
 import collections
 
 import tensorflow as tf
+
 import opennmt.tfa as tfa
 
 from opennmt import constants

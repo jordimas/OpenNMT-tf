@@ -14,9 +14,9 @@
 # ==============================================================================
 """Utilities for testing Addons."""
 
+import inspect
 import os
 import random
-import inspect
 
 import numpy as np
 import pytest

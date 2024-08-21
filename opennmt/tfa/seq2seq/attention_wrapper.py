@@ -935,7 +935,7 @@ def monotonic_attention(
             p_choose_i
             * cumprod_1mp_choose_i
             * tf.cumsum(
-                previous_attention /
+                previous_attention,
                 # Clip cumprod_1mp to avoid divide-by-zero
                 tf.clip_by_value(cumprod_1mp_choose_i, 1e-10, 1.0),
                 axis=1,
@@ -1390,27 +1390,30 @@ class AttentionWrapperState(
     def clone(self, **kwargs):
         """Clone this object, overriding components provided by kwargs.
 
-        The new state fields' shape must match original state fields' shape.
-        This will be validated, and original fields' shape will be propagated
-        to new fields.
+                The new state fields' shape must match original state fields' shape.
+                This will be validated, and original fields' shape will be propagated
+                to new fields.
 
-        Example:
+                Example:
 
-        >>> batch_size = 1
-        >>> memory = tf.random.normal(shape=[batch_size, 3, 100])
-        >>> encoder_state = [tf.zeros((batch_size, 100)), tf.zeros((batch_size, 100))]
-        >>> attention_mechanism = tfa.seq2seq.LuongAttention(100, memory=memory, memory_sequence_length=[3] * batch_size)
-        >>> attention_cell = tfa.seq2seq.AttentionWrapper(tf.keras.layers.LSTMCell(100), attention_mechanism, attention_layer_size=10)
-        >>> decoder_initial_state = attention_cell.get_initial_state(batch_size=batch_size, dtype=tf.float32)
-        >>> decoder_initial_state = decoder_initial_state.clone(cell_state=encoder_state)
+                >>> batch_size = 1
+                >>> memory = tf.random.normal(shape=[batch_size, 3, 100])
+                >>> encoder_state = [tf.zeros((batch_size, 100)), tf.zeros((batch_size, 100))]
+                >>> attention_mechanism = tfa.seq2seq.LuongAttention(100, memory=memory,
+        memory_sequence_length=[3] * batch_size)
+                >>> attention_cell = tfa.seq2seq.AttentionWrapper(tf.keras.layers.LSTMCell(100),
+        attention_mechanism, attention_layer_size=10)
+                >>> decoder_initial_state =
+        attention_cell.get_initial_state(batch_size=batch_size, dtype=tf.float32)
+                >>> decoder_initial_state = decoder_initial_state.clone(cell_state=encoder_state)
 
-        Args:
-          **kwargs: Any properties of the state object to replace in the
-            returned `AttentionWrapperState`.
+                Args:
+                  **kwargs: Any properties of the state object to replace in the
+                    returned `AttentionWrapperState`.
 
-        Returns:
-          A new `AttentionWrapperState` whose properties are the same as
-          this one, except any overridden properties as provided in `kwargs`.
+                Returns:
+                  A new `AttentionWrapperState` whose properties are the same as
+                  this one, except any overridden properties as provided in `kwargs`.
         """
 
         def with_same_shape(old, new):
@@ -1623,90 +1626,97 @@ class AttentionWrapper(AbstractRNNCell):
     ):
         """Construct the `AttentionWrapper`.
 
-        **NOTE** If you are using the `tfa.seq2seq.BeamSearchDecoder` with a cell wrapped
-        in `AttentionWrapper`, then you must ensure that:
+                **NOTE** If you are using the `tfa.seq2seq.BeamSearchDecoder` with a cell wrapped
+                in `AttentionWrapper`, then you must ensure that:
 
-        - The encoder output has been tiled to `beam_width` via
-          `tfa.seq2seq.tile_batch` (NOT `tf.tile`).
-        - The `batch_size` argument passed to the `get_initial_state` method of
-          this wrapper is equal to `true_batch_size * beam_width`.
-        - The initial state created with `get_initial_state` above contains a
-          `cell_state` value containing properly tiled final state from the
-          encoder.
+                - The encoder output has been tiled to `beam_width` via
+                  `tfa.seq2seq.tile_batch` (NOT `tf.tile`).
+                - The `batch_size` argument passed to the `get_initial_state` method of
+                  this wrapper is equal to `true_batch_size * beam_width`.
+                - The initial state created with `get_initial_state` above contains a
+                  `cell_state` value containing properly tiled final state from the
+                  encoder.
 
-        An example:
+                An example:
 
-        >>> batch_size = 1
-        >>> beam_width = 5
-        >>> sequence_length = tf.convert_to_tensor([5])
-        >>> encoder_outputs = tf.random.uniform(shape=(batch_size, 5, 10))
-        >>> encoder_final_state = [tf.zeros((batch_size, 10)), tf.zeros((batch_size, 10))]
-        >>> tiled_encoder_outputs = tfa.seq2seq.tile_batch(encoder_outputs, multiplier=beam_width)
-        >>> tiled_encoder_final_state = tfa.seq2seq.tile_batch(encoder_final_state, multiplier=beam_width)
-        >>> tiled_sequence_length = tfa.seq2seq.tile_batch(sequence_length, multiplier=beam_width)
-        >>> attention_mechanism = tfa.seq2seq.BahdanauAttention(10, memory=tiled_encoder_outputs, memory_sequence_length=tiled_sequence_length)
-        >>> attention_cell = tfa.seq2seq.AttentionWrapper(tf.keras.layers.LSTMCell(10), attention_mechanism)
-        >>> decoder_initial_state = attention_cell.get_initial_state(batch_size=batch_size * beam_width, dtype=tf.float32)
-        >>> decoder_initial_state = decoder_initial_state.clone(cell_state=tiled_encoder_final_state)
+                >>> batch_size = 1
+                >>> beam_width = 5
+                >>> sequence_length = tf.convert_to_tensor([5])
+                >>> encoder_outputs = tf.random.uniform(shape=(batch_size, 5, 10))
+                >>> encoder_final_state = [tf.zeros((batch_size, 10)), tf.zeros((batch_size, 10))]
+                >>> tiled_encoder_outputs = tfa.seq2seq.tile_batch(encoder_outputs,
+        multiplier=beam_width)
+                >>> tiled_encoder_final_state = tfa.seq2seq.tile_batch(encoder_final_state,
+        multiplier=beam_width)
+                >>> tiled_sequence_length = tfa.seq2seq.tile_batch(sequence_length,
+        multiplier=beam_width)
+                >>> attention_mechanism = tfa.seq2seq.BahdanauAttention(10,
+        memory=tiled_encoder_outputs, memory_sequence_length=tiled_sequence_length)
+                >>> attention_cell = tfa.seq2seq.AttentionWrapper(tf.keras.layers.LSTMCell(10),
+        attention_mechanism)
+                >>> decoder_initial_state =
+        attention_cell.get_initial_state(batch_size=batch_size * beam_width, dtype=tf.float32)
+                >>> decoder_initial_state =
+        decoder_initial_state.clone(cell_state=tiled_encoder_final_state)
 
-        Args:
-          cell: A layer that implements the `tf.keras.layers.AbstractRNNCell`
-            interface.
-          attention_mechanism: A list of `tfa.seq2seq.AttentionMechanism`
-            instances single instance.
-          attention_layer_size: A list of Python integers or a single Python
-            integer, the depth of the attention (output) layer(s). If `None`
-            (default), use the context as attention at each time step.
-            Otherwise, feed the context and cell output into the attention
-            layer to generate attention at each time step. If
-            `attention_mechanism` is a list, `attention_layer_size` must be a list
-            of the same length. If `attention_layer` is set, this must be `None`.
-            If `attention_fn` is set, it must guaranteed that the outputs of
-            `attention_fn` also meet the above requirements.
-          alignment_history: Python boolean, whether to store alignment history
-            from all time steps in the final output state (currently stored as
-            a time major `TensorArray` on which you must call `stack()`).
-          cell_input_fn: (optional) A `callable`.  The default is:
-            `lambda inputs, attention:
-              tf.concat([inputs, attention], -1)`.
-          output_attention: Python bool.  If `True` (default), the output at
-            each time step is the attention value.  This is the behavior of
-            Luong-style attention mechanisms.  If `False`, the output at each
-            time step is the output of `cell`.  This is the behavior of
-            Bahdanau-style attention mechanisms.  In both cases, the
-            `attention` tensor is propagated to the next time step via the
-            state and is used there. This flag only controls whether the
-            attention mechanism is propagated up to the next cell in an RNN
-            stack or to the top RNN output.
-          initial_cell_state: The initial state value to use for the cell when
-            the user calls `get_initial_state()`.  Note that if this value is
-            provided now, and the user uses a `batch_size` argument of
-            `get_initial_state` which does not match the batch size of
-            `initial_cell_state`, proper behavior is not guaranteed.
-          name: Name to use when creating ops.
-          attention_layer: A list of `tf.keras.layers.Layer` instances or a
-            single `tf.keras.layers.Layer` instance taking the context
-            and cell output as inputs to generate attention at each time step.
-            If `None` (default), use the context as attention at each time step.
-            If `attention_mechanism` is a list, `attention_layer` must be a list of
-            the same length. If `attention_layer_size` is set, this must be
-            `None`.
-          attention_fn: An optional callable function that allows users to
-            provide their own customized attention function, which takes input
-            `(attention_mechanism, cell_output, attention_state,
-            attention_layer)` and outputs `(attention, alignments,
-            next_attention_state)`. If provided, the `attention_layer_size` should
-            be the size of the outputs of `attention_fn`.
-          **kwargs: Other keyword arguments for layer creation.
+                Args:
+                  cell: A layer that implements the `tf.keras.layers.AbstractRNNCell`
+                    interface.
+                  attention_mechanism: A list of `tfa.seq2seq.AttentionMechanism`
+                    instances single instance.
+                  attention_layer_size: A list of Python integers or a single Python
+                    integer, the depth of the attention (output) layer(s). If `None`
+                    (default), use the context as attention at each time step.
+                    Otherwise, feed the context and cell output into the attention
+                    layer to generate attention at each time step. If
+                    `attention_mechanism` is a list, `attention_layer_size` must be a list
+                    of the same length. If `attention_layer` is set, this must be `None`.
+                    If `attention_fn` is set, it must guaranteed that the outputs of
+                    `attention_fn` also meet the above requirements.
+                  alignment_history: Python boolean, whether to store alignment history
+                    from all time steps in the final output state (currently stored as
+                    a time major `TensorArray` on which you must call `stack()`).
+                  cell_input_fn: (optional) A `callable`.  The default is:
+                    `lambda inputs, attention:
+                      tf.concat([inputs, attention], -1)`.
+                  output_attention: Python bool.  If `True` (default), the output at
+                    each time step is the attention value.  This is the behavior of
+                    Luong-style attention mechanisms.  If `False`, the output at each
+                    time step is the output of `cell`.  This is the behavior of
+                    Bahdanau-style attention mechanisms.  In both cases, the
+                    `attention` tensor is propagated to the next time step via the
+                    state and is used there. This flag only controls whether the
+                    attention mechanism is propagated up to the next cell in an RNN
+                    stack or to the top RNN output.
+                  initial_cell_state: The initial state value to use for the cell when
+                    the user calls `get_initial_state()`.  Note that if this value is
+                    provided now, and the user uses a `batch_size` argument of
+                    `get_initial_state` which does not match the batch size of
+                    `initial_cell_state`, proper behavior is not guaranteed.
+                  name: Name to use when creating ops.
+                  attention_layer: A list of `tf.keras.layers.Layer` instances or a
+                    single `tf.keras.layers.Layer` instance taking the context
+                    and cell output as inputs to generate attention at each time step.
+                    If `None` (default), use the context as attention at each time step.
+                    If `attention_mechanism` is a list, `attention_layer` must be a list of
+                    the same length. If `attention_layer_size` is set, this must be
+                    `None`.
+                  attention_fn: An optional callable function that allows users to
+                    provide their own customized attention function, which takes input
+                    `(attention_mechanism, cell_output, attention_state,
+                    attention_layer)` and outputs `(attention, alignments,
+                    next_attention_state)`. If provided, the `attention_layer_size` should
+                    be the size of the outputs of `attention_fn`.
+                  **kwargs: Other keyword arguments for layer creation.
 
-        Raises:
-          TypeError: `attention_layer_size` is not `None` and
-            (`attention_mechanism` is a list but `attention_layer_size` is not;
-            or vice versa).
-          ValueError: if `attention_layer_size` is not `None`,
-            `attention_mechanism` is a list, and its length does not match that
-            of `attention_layer_size`; if `attention_layer_size` and
-            `attention_layer` are set simultaneously.
+                Raises:
+                  TypeError: `attention_layer_size` is not `None` and
+                    (`attention_mechanism` is a list but `attention_layer_size` is not;
+                    or vice versa).
+                  ValueError: if `attention_layer_size` is not `None`,
+                    `attention_mechanism` is a list, and its length does not match that
+                    of `attention_layer_size`; if `attention_layer_size` and
+                    `attention_layer` are set simultaneously.
         """
         super().__init__(name=name, **kwargs)
         keras_utils.assert_like_rnncell("cell", cell)

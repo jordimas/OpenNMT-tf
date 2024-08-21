@@ -14,134 +14,21 @@
 # ==============================================================================
 import warnings
 
+from typing import Optional, Tuple
+
 import numpy as np
 import tensorflow as tf
 
-
-def _generate_zero_filled_state_for_cell2(cell, inputs, batch_size, dtype):
-    if inputs is not None:
-        batch_size = tf.shape(inputs)[0]
-        dtype = inputs.dtype
-    return _generate_zero_filled_state2(batch_size, cell.state_size, dtype)
-
-
-def _generate_zero_filled_state2(batch_size_tensor, state_size, dtype):
-    """Generate a zero filled tensor with shape [batch_size, state_size]."""
-    if batch_size_tensor is None or dtype is None:
-        raise ValueError(
-            "batch_size and dtype cannot be None while constructing initial state: "
-            "batch_size={}, dtype={}".format(batch_size_tensor, dtype)
-        )
-
-    def create_zeros(unnested_state_size):
-        flat_dims = tf.TensorShape(unnested_state_size).as_list()
-        init_state_size = [batch_size_tensor] + flat_dims
-        return tf.zeros(init_state_size, dtype=dtype)
-
-    if tf.nest.is_nested(state_size):
-        return tf.nest.map_structure(create_zeros, state_size)
-    else:
-        return create_zeros(state_size)
-
-
-class AbstractRNNCell2(tf.keras.layers.Layer):
-    """Abstract object representing an RNN cell.
-
-    This is a base class for implementing RNN cells with custom behavior.
-
-    Every `RNNCell` must have the properties below and implement `call` with
-    the signature `(output, next_state) = call(input, state)`.
-
-    Examples:
-
-    ```python
-      class MinimalRNNCell(AbstractRNNCell):
-
-        def __init__(self, units, **kwargs):
-          self.units = units
-          super(MinimalRNNCell, self).__init__(**kwargs)
-
-        @property
-        def state_size(self):
-          return self.units
-
-        def build(self, input_shape):
-          self.kernel = self.add_weight(shape=(input_shape[-1], self.units),
-                                        initializer='uniform',
-                                        name='kernel')
-          self.recurrent_kernel = self.add_weight(
-              shape=(self.units, self.units),
-              initializer='uniform',
-              name='recurrent_kernel')
-          self.built = True
-
-        def call(self, inputs, states):
-          prev_output = states[0]
-          h = backend.dot(inputs, self.kernel)
-          output = h + backend.dot(prev_output, self.recurrent_kernel)
-          return output, output
-    ```
-
-    This definition of cell differs from the definition used in the literature.
-    In the literature, 'cell' refers to an object with a single scalar output.
-    This definition refers to a horizontal array of such units.
-
-    An RNN cell, in the most abstract setting, is anything that has
-    a state and performs some operation that takes a matrix of inputs.
-    This operation results in an output matrix with `self.output_size` columns.
-    If `self.state_size` is an integer, this operation also results in a new
-    state matrix with `self.state_size` columns.  If `self.state_size` is a
-    (possibly nested tuple of) TensorShape object(s), then it should return a
-    matching structure of Tensors having shape `[batch_size].concatenate(s)`
-    for each `s` in `self.batch_size`.
-    """
-
-    def call(self, inputs, states):
-        """The function that contains the logic for one RNN step calculation.
-
-        Args:
-          inputs: the input tensor, which is a slide from the overall RNN input by
-            the time dimension (usually the second dimension).
-          states: the state tensor from previous step, which has the same shape
-            as `(batch, state_size)`. In the case of timestep 0, it will be the
-            initial state user specified, or zero filled tensor otherwise.
-
-        Returns:
-          A tuple of two tensors:
-            1. output tensor for the current timestep, with size `output_size`.
-            2. state tensor for next step, which has the shape of `state_size`.
-        """
-        raise NotImplementedError("Abstract method")
-
-    @property
-    def state_size(self):
-        """size(s) of state(s) used by this cell.
-
-        It can be represented by an Integer, a TensorShape or a tuple of Integers
-        or TensorShapes.
-        """
-        raise NotImplementedError("Abstract method")
-
-    @property
-    def output_size(self):
-        """Integer or TensorShape: size of outputs produced by this cell."""
-        raise NotImplementedError("Abstract method")
-
-    def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
-        return _generate_zero_filled_state_for_cell2(self, inputs, batch_size, dtype)
-
-
-from typing import Optional, Tuple
-
 from typeguard import typechecked
 
+from opennmt.tfa.rnn.abstract_rnn_cell import AbstractRNNCell
 from opennmt.tfa.utils.types import TensorLike
 
 # TODO: Wrap functions in @tf.function once
 # https://github.com/tensorflow/tensorflow/issues/29075 is resolved
 
 
-def crf_filtered_inputs2(inputs: TensorLike, tag_bitmap: TensorLike) -> tf.Tensor:
+def crf_filtered_inputs(inputs: TensorLike, tag_bitmap: TensorLike) -> tf.Tensor:
     """Constrains the inputs to filter out certain tags at each time step.
 
     tag_bitmap limits the allowed tags at each input time step.
@@ -167,7 +54,7 @@ def crf_filtered_inputs2(inputs: TensorLike, tag_bitmap: TensorLike) -> tf.Tenso
     return filtered_inputs
 
 
-def crf_sequence_score2(
+def crf_sequence_score(
     inputs: TensorLike,
     tag_indices: TensorLike,
     sequence_lengths: TensorLike,
@@ -220,7 +107,7 @@ def crf_sequence_score2(
     return tf.cond(tf.equal(tf.shape(inputs)[1], 1), _single_seq_fn, _multi_seq_fn)
 
 
-def crf_multitag_sequence_score2(
+def crf_multitag_sequence_score(
     inputs: TensorLike,
     tag_bitmap: TensorLike,
     sequence_lengths: TensorLike,
@@ -250,7 +137,7 @@ def crf_multitag_sequence_score2(
     """
     tag_bitmap = tf.cast(tag_bitmap, dtype=tf.bool)
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
-    filtered_inputs = crf_filtered_inputs2(inputs, tag_bitmap)
+    filtered_inputs = crf_filtered_inputs(inputs, tag_bitmap)
 
     # If max_seq_len is 1, we skip the score calculation and simply gather the
     # unary potentials of all active tags.
@@ -354,7 +241,7 @@ def crf_log_likelihood(
             initializer([num_tags, num_tags]), "transitions"
         )
     transition_params = tf.cast(transition_params, inputs.dtype)
-    sequence_scores = crf_sequence_score2(
+    sequence_scores = crf_sequence_score(
         inputs, tag_indices, sequence_lengths, transition_params
     )
     log_norm = crf_log_norm(inputs, sequence_lengths, transition_params)
@@ -519,7 +406,7 @@ def viterbi_decode(score: TensorLike, transition_params: TensorLike) -> tf.Tenso
     return viterbi, viterbi_score
 
 
-class CrfDecodeForwardRnnCell(AbstractRNNCell2):
+class CrfDecodeForwardRnnCell(AbstractRNNCell):
     """Computes the forward decoding in a linear-chain CRF."""
 
     @typechecked
@@ -615,7 +502,7 @@ def crf_decode_forward(
     return crf_fwd_layer(inputs, state, mask=mask)
 
 
-def crf_decode_backward2(inputs: TensorLike, state: TensorLike) -> tf.Tensor:
+def crf_decode_backward(inputs: TensorLike, state: TensorLike) -> tf.Tensor:
     """Computes backward decoding in a linear-chain CRF.
 
     Args:
@@ -690,7 +577,7 @@ def crf_decode(
         initial_state = tf.cast(tf.argmax(last_score, axis=1), dtype=tf.int32)
         initial_state = tf.expand_dims(initial_state, axis=-1)
 
-        decode_tags = crf_decode_backward2(backpointers, initial_state)
+        decode_tags = crf_decode_backward(backpointers, initial_state)
         decode_tags = tf.squeeze(decode_tags, axis=[2])
         decode_tags = tf.concat([initial_state, decode_tags], axis=1)
         decode_tags = tf.reverse_sequence(decode_tags, sequence_length, seq_axis=1)
@@ -736,5 +623,5 @@ def crf_constrained_decode(
       best_score: A [batch_size] vector, containing the score of `decode_tags`.
     """
 
-    filtered_potentials = crf_filtered_inputs2(potentials, tag_bitmap)
+    filtered_potentials = crf_filtered_inputs(potentials, tag_bitmap)
     return crf_decode(filtered_potentials, transition_params, sequence_length)

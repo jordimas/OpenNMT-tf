@@ -153,8 +153,11 @@ def gpus_for_testing():
 
 @pytest.fixture(scope="session", autouse=True)
 def set_global_variables(request):
-    if request.config.getoption("--skip-custom-ops"):
-        resource_loader.SKIP_CUSTOM_OPS = True
+    pass
+
+
+#    if request.config.getoption("--skip-custom-ops"):
+#        resource_loader.SKIP_CUSTOM_OPS = True
 
 
 def pytest_configure(config):

@@ -2,6 +2,7 @@
 
 import numpy as np
 import tensorflow as tf
+
 import opennmt.tfa as tfa
 
 from opennmt import inputters

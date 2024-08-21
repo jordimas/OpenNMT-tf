@@ -13,5 +13,5 @@
 # limitations under the License.
 # ==============================================================================
 """Useful extra functionality for TensorFlow maintained by SIG-addons."""
-from opennmt.tfa import optimizers, options, rnn, seq2seq, text
+from opennmt.tfa import optimizers, rnn, seq2seq, text
 from opennmt.tfa.utils import types

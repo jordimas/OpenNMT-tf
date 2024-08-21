@@ -22,9 +22,6 @@ import numpy as np
 import pytest
 import tensorflow as tf
 
-from opennmt.tfa import options
-from opennmt.tfa.utils import resource_loader
-
 # from opennmt.tfa.utils.tf_test_utils import layer_test  # noqa
 
 NUMBER_OF_WORKERS = int(os.environ.get("PYTEST_XDIST_WORKER_COUNT", "1"))
@@ -93,23 +90,6 @@ def only_run_functions_eagerly(request):
     request.addfinalizer(finalizer)
 
 
-@pytest.fixture(scope="function", params=["custom_ops", "py_ops"])
-def run_custom_and_py_ops(request):
-    previous_is_custom_kernel_disabled = options.is_custom_kernel_disabled()
-    if request.param == "custom_ops":
-        options.enable_custom_kernel()
-    elif request.param == "py_ops":
-        options.disable_custom_kernel()
-
-    def _restore_py_ops_value():
-        if previous_is_custom_kernel_disabled:
-            options.disable_custom_kernel()
-        else:
-            options.enable_custom_kernel()
-
-    request.addfinalizer(_restore_py_ops_value)
-
-
 @pytest.fixture(scope="function", params=["float32", "mixed_float16"])
 def run_with_mixed_precision_policy(request):
     tf.keras.mixed_precision.set_global_policy(request.param)
@@ -154,10 +134,6 @@ def gpus_for_testing():
 @pytest.fixture(scope="session", autouse=True)
 def set_global_variables(request):
     pass
-
-
-#    if request.config.getoption("--skip-custom-ops"):
-#        resource_loader.SKIP_CUSTOM_OPS = True
 
 
 def pytest_configure(config):

@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - addons*
+      - *
     tags:
       - v*
   pull_request:

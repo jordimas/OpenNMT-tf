@@ -597,32 +597,3 @@ def crf_decode(
         return tf.cond(
             tf.equal(tf.shape(potentials)[1], 1), _single_seq_fn, _multi_seq_fn
         )
-
-
-def crf_constrained_decode(
-    potentials: TensorLike,
-    tag_bitmap: TensorLike,
-    transition_params: TensorLike,
-    sequence_length: TensorLike,
-) -> tf.Tensor:
-    """Decode the highest scoring sequence of tags under constraints.
-
-    This is a function for tensor.
-
-    Args:
-      potentials: A [batch_size, max_seq_len, num_tags] tensor of
-                unary potentials.
-      tag_bitmap: A [batch_size, max_seq_len, num_tags] boolean tensor
-          representing all active tags at each index for which to calculate the
-          unnormalized score.
-      transition_params: A [num_tags, num_tags] matrix of
-                binary potentials.
-      sequence_length: A [batch_size] vector of true sequence lengths.
-    Returns:
-      decode_tags: A [batch_size, max_seq_len] matrix, with dtype `tf.int32`.
-                  Contains the highest scoring tag indices.
-      best_score: A [batch_size] vector, containing the score of `decode_tags`.
-    """
-
-    filtered_potentials = crf_filtered_inputs(potentials, tag_bitmap)
-    return crf_decode(filtered_potentials, transition_params, sequence_length)

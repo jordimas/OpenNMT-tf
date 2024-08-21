@@ -24,17 +24,12 @@ from opennmt.tfa.seq2seq.attention_wrapper import (
     monotonic_attention,
     safe_cumprod,
 )
-from opennmt.tfa.seq2seq.basic_decoder import BasicDecoder, BasicDecoderOutput
 from opennmt.tfa.seq2seq.beam_search_decoder import tile_batch
 from opennmt.tfa.seq2seq.decoder import BaseDecoder, Decoder, dynamic_decode
 from opennmt.tfa.seq2seq.loss import SequenceLoss, sequence_loss
 from opennmt.tfa.seq2seq.sampler import (
     CustomSampler,
-    GreedyEmbeddingSampler,
     InferenceSampler,
-    SampleEmbeddingSampler,
     Sampler,
-    ScheduledEmbeddingTrainingSampler,
-    ScheduledOutputTrainingSampler,
     TrainingSampler,
 )

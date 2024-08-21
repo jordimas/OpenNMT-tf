@@ -27,4 +27,4 @@ from opennmt.tfa.seq2seq.attention_wrapper import (
 from opennmt.tfa.seq2seq.beam_search_decoder import tile_batch
 from opennmt.tfa.seq2seq.decoder import BaseDecoder, Decoder, dynamic_decode
 from opennmt.tfa.seq2seq.loss import SequenceLoss, sequence_loss
-from opennmt.tfa.seq2seq.sampler import CustomSampler, InferenceSampler, Sampler
+from opennmt.tfa.seq2seq.sampler import InferenceSampler, Sampler

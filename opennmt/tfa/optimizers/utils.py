@@ -21,42 +21,6 @@ from typing import List
 import tensorflow as tf
 
 
-def fit_bn(model, *args, **kwargs):
-    """Resets batch normalization layers of model, and recalculates the
-    statistics for each batchnorm layer by running a pass on the data.
-
-    Args:
-        model: An instance of tf.keras.Model
-        *args, **kwargs: Params that'll be passed to `.fit` method of model
-    """
-    kwargs["epochs"] = 1
-    if not isinstance(model, tf.keras.Model):
-        raise TypeError("model must be an instance of tf.keras.Model")
-
-    if not model.built:
-        raise ValueError("Call `fit_bn` after the model is built and trained")
-
-    assign_ops = []
-    for layer in model.layers:
-        if isinstance(layer, tf.keras.layers.BatchNormalization):
-            assign_ops.extend(
-                [
-                    layer.moving_mean.assign(tf.zeros_like(layer.moving_mean)),
-                    layer.moving_variance.assign(tf.ones_like(layer.moving_variance)),
-                ]
-            )
-
-    _trainable = model.trainable
-    _metrics = model._metrics
-    model.trainable = False
-    model._metrics = []
-
-    model.fit(*args, **kwargs)
-
-    model.trainable = _trainable
-    model._metrics = _metrics
-
-
 def get_variable_name(variable) -> str:
     """Get the variable name from the variable tensor."""
     param_name = variable.name

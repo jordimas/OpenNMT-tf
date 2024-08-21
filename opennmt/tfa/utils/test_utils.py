@@ -25,7 +25,7 @@ import tensorflow as tf
 from opennmt.tfa import options
 from opennmt.tfa.utils import resource_loader
 
-#from opennmt.tfa.utils.tf_test_utils import layer_test  # noqa
+# from opennmt.tfa.utils.tf_test_utils import layer_test  # noqa
 
 NUMBER_OF_WORKERS = int(os.environ.get("PYTEST_XDIST_WORKER_COUNT", "1"))
 WORKER_ID = int(os.environ.get("PYTEST_XDIST_WORKER", "gw0")[2])
@@ -280,7 +280,8 @@ def discover_classes(module, parent, class_exceptions):
     Args:
         module: a module in which to search for classes that inherit from the parent class
         parent: the parent class that identifies classes in the module that should be tested
-        class_exceptions: a list of specific classes that should be excluded when discovering classes in a module
+        class_exceptions: a list of specific classes that should be excluded when
+        discovering classes in a module
 
     Returns:
         a list of classes for testing using pytest for parameterized tests

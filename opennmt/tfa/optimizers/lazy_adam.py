@@ -28,7 +28,6 @@ import tensorflow as tf
 
 from typeguard import typechecked
 
-# from tensorflow_addons.utils.types import FloatTensorLike
 from opennmt.tfa.utils.types import FloatTensorLike
 
 if importlib.util.find_spec("tensorflow.keras.optimizers.legacy") is not None:

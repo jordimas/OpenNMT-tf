@@ -19,14 +19,3 @@ from opennmt.tfa.utils.test_utils import (  # noqa: F401
     set_global_variables,
     set_seeds,
 )
-
-# fixtures present in this file will be available
-# when running tests and can be referenced with strings
-# https://docs.pytest.org/en/latest/fixture.html#conftest-py-sharing-fixture-functions
-
-
-@pytest.fixture(autouse=True)
-def add_doctest_namespace(doctest_namespace):
-    doctest_namespace["np"] = np
-    doctest_namespace["tf"] = tf
-    doctest_namespace["tfa"] = tfa

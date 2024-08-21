@@ -470,36 +470,6 @@ def _test_with_attention(
 
 
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
-def test_bahdanau_normalized_dtype(dtype):
-    dummy_data = DummyData2()
-    encoder_outputs = dummy_data.encoder_outputs.astype(dtype)
-    decoder_inputs = dummy_data.decoder_inputs.astype(dtype)
-    attention_mechanism = wrapper.BahdanauAttention(
-        units=dummy_data.units,
-        memory=encoder_outputs,
-        memory_sequence_length=dummy_data.encoder_sequence_length,
-        normalize=True,
-        dtype=dtype,
-    )
-    cell = tf.keras.layers.LSTMCell(
-        dummy_data.units, recurrent_activation="sigmoid", dtype=dtype
-    )
-    cell = wrapper.AttentionWrapper(cell, attention_mechanism, dtype=dtype)
-
-    sampler = sampler_py.TrainingSampler()
-    my_decoder = basic_decoder.BasicDecoder(cell=cell, sampler=sampler, dtype=dtype)
-
-    final_outputs, final_state, _ = my_decoder(
-        decoder_inputs,
-        initial_state=cell.get_initial_state(batch_size=dummy_data.batch, dtype=dtype),
-        sequence_length=dummy_data.decoder_sequence_length,
-    )
-    assert isinstance(final_outputs, basic_decoder.BasicDecoderOutput)
-    assert final_outputs.rnn_output.dtype == dtype
-    assert isinstance(final_state, wrapper.AttentionWrapperState)
-
-
-@pytest.mark.parametrize("dtype", [np.float32, np.float64])
 def test_luong_scaled_dtype(dtype):
     dummy_data = DummyData2()
     # Test case for GitHub issue 18099
@@ -538,82 +508,6 @@ def set_random_state_for_tf_and_np():
     tf.random.set_seed(87654321)
     np.random.seed(87654321)
     DummyData2()
-
-
-@pytest.mark.usefixtures("run_with_mixed_precision_policy")
-def test_bahdanau_not_normalized():
-    set_random_state_for_tf_and_np()
-    policy = tf.keras.mixed_precision.global_policy()
-    create_attention_mechanism = wrapper.BahdanauAttention
-    create_attention_kwargs = {"kernel_initializer": "ones"}
-    expected_final_output = basic_decoder.BasicDecoderOutput(
-        rnn_output=ResultSummary(
-            shape=(5, 3, 6), dtype=policy.compute_dtype, mean=-0.003204414
-        ),
-        sample_id=ResultSummary(shape=(5, 3), dtype=np.dtype(np.int32), mean=3.2),
-    )
-    expected_final_state = wrapper.AttentionWrapperState(
-        cell_state=[
-            ResultSummary(shape=(5, 9), dtype=policy.compute_dtype, mean=0.40868404),
-            ResultSummary(shape=(5, 9), dtype=policy.compute_dtype, mean=0.89017969),
-        ],
-        attention=ResultSummary(
-            shape=(5, 6), dtype=policy.compute_dtype, mean=0.041453815
-        ),
-        alignments=ResultSummary(shape=(5, 8), dtype=policy.compute_dtype, mean=0.125),
-        attention_state=ResultSummary(
-            shape=(5, 8), dtype=policy.compute_dtype, mean=0.125
-        ),
-        alignment_history=(),
-    )
-    expected_final_alignment_history = ResultSummary(
-        shape=(3, 5, 8), dtype=policy.compute_dtype, mean=0.125
-    )
-
-    _test_with_attention(
-        create_attention_mechanism,
-        expected_final_output,
-        expected_final_state,
-        alignment_history=True,
-        create_query_layer=True,
-        expected_final_alignment_history=expected_final_alignment_history,
-        create_attention_kwargs=create_attention_kwargs,
-    )
-
-
-def test_bahdanau_normalized():
-    set_random_state_for_tf_and_np()
-    create_attention_mechanism = wrapper.BahdanauAttention
-    create_attention_kwargs = {"kernel_initializer": "ones", "normalize": True}
-
-    expected_final_output = basic_decoder.BasicDecoderOutput(
-        rnn_output=ResultSummary(
-            shape=(5, 3, 6), dtype=np.dtype("float32"), mean=-0.008089137
-        ),
-        sample_id=ResultSummary(shape=(5, 3), dtype=np.dtype("int32"), mean=2.8),
-    )
-    expected_final_state = wrapper.AttentionWrapperState(
-        cell_state=[
-            ResultSummary(shape=(5, 9), dtype=np.dtype("float32"), mean=0.49166861),
-            ResultSummary(shape=(5, 9), dtype=np.dtype("float32"), mean=1.01068615),
-        ],
-        attention=ResultSummary(
-            shape=(5, 6), dtype=np.dtype("float32"), mean=0.042427111
-        ),
-        alignments=ResultSummary(shape=(5, 8), dtype=np.dtype("float32"), mean=0.125),
-        attention_state=ResultSummary(
-            shape=(5, 8), dtype=np.dtype("float32"), mean=0.125
-        ),
-        alignment_history=(),
-    )
-
-    _test_with_attention(
-        create_attention_mechanism,
-        expected_final_output,
-        expected_final_state,
-        create_query_layer=True,
-        create_attention_kwargs=create_attention_kwargs,
-    )
 
 
 @pytest.mark.usefixtures("run_with_mixed_precision_policy")
@@ -682,42 +576,6 @@ def test_luong_scaled():
         expected_final_output,
         expected_final_state,
         attention_mechanism_depth=9,
-        create_attention_kwargs=create_attention_kwargs,
-    )
-
-
-def test_not_use_attention_layer():
-    set_random_state_for_tf_and_np()
-    create_attention_mechanism = wrapper.BahdanauAttention
-    create_attention_kwargs = {"kernel_initializer": "ones"}
-
-    expected_final_output = basic_decoder.BasicDecoderOutput(
-        rnn_output=ResultSummary(
-            shape=(5, 3, 10), dtype=np.dtype("float32"), mean=0.078317143
-        ),
-        sample_id=ResultSummary(shape=(5, 3), dtype=np.dtype("int32"), mean=4.2),
-    )
-    expected_final_state = wrapper.AttentionWrapperState(
-        cell_state=[
-            ResultSummary(shape=(5, 9), dtype=np.dtype("float32"), mean=0.89382392),
-            ResultSummary(shape=(5, 9), dtype=np.dtype("float32"), mean=1.722382),
-        ],
-        attention=ResultSummary(
-            shape=(5, 10), dtype=np.dtype("float32"), mean=0.026356646
-        ),
-        alignments=ResultSummary(shape=(5, 8), dtype=np.dtype("float32"), mean=0.125),
-        attention_state=ResultSummary(
-            shape=(5, 8), dtype=np.dtype("float32"), mean=0.125
-        ),
-        alignment_history=(),
-    )
-
-    _test_with_attention(
-        create_attention_mechanism,
-        expected_final_output,
-        expected_final_state,
-        attention_layer_size=None,
-        create_query_layer=True,
         create_attention_kwargs=create_attention_kwargs,
     )
 

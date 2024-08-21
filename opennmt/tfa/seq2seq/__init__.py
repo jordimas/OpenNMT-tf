@@ -18,8 +18,6 @@ from opennmt.tfa.seq2seq.attention_wrapper import (
     AttentionMechanism,
     AttentionWrapper,
     AttentionWrapperState,
-    BahdanauAttention,
-    BahdanauMonotonicAttention,
     LuongAttention,
     LuongMonotonicAttention,
     hardmax,

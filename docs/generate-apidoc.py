@@ -35,6 +35,7 @@ def document_function(output_dir, function_path):
 def module_is_public(module):
     return (
         module.__name__.startswith("opennmt")
+        and not module.__name__.startswith("opennmt.tfa")
         and hasattr(module, "__file__")
         and module.__file__.endswith("__init__.py")
     )

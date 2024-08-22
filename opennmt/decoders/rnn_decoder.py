@@ -1,7 +1,8 @@
 """Define RNN-based decoders."""
 
 import tensorflow as tf
-import tensorflow_addons as tfa
+
+import opennmt.tfa as tfa
 
 from opennmt.decoders import decoder
 from opennmt.layers import bridge, common, rnn, transformer

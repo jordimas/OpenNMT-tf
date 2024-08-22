@@ -2,7 +2,8 @@
 
 import numpy as np
 import tensorflow as tf
-import tensorflow_addons as tfa
+
+import opennmt.tfa as tfa
 
 from opennmt import inputters
 from opennmt.models.model import Model

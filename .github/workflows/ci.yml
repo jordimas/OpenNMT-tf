@@ -69,6 +69,7 @@ jobs:
       - name: Run tests
         run: |
           pytest --cov=opennmt --cov-report xml opennmt/tests
+          pytest opennmt/tfa/
 
       - name: Upload coverage report
         if: matrix.tensorflow == '2.13'

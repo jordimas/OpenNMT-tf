@@ -4,7 +4,8 @@ import abc
 import collections
 
 import tensorflow as tf
-import tensorflow_addons as tfa
+
+import opennmt.tfa as tfa
 
 from opennmt import constants
 from opennmt.utils import misc

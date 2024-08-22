@@ -3,13 +3,12 @@
 import inspect
 
 import tensorflow as tf
-import tensorflow_addons as tfa
 
 from packaging.version import Version
-from tensorflow_addons.optimizers.weight_decay_optimizers import (
-    DecoupledWeightDecayExtension,
-)
 
+import opennmt.tfa as tfa
+
+from opennmt.tfa.optimizers.weight_decay_optimizers import DecoupledWeightDecayExtension
 from opennmt.utils import misc
 
 if Version(tf.__version__) >= Version("2.11.0"):

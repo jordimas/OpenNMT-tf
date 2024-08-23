@@ -1,7 +1,8 @@
 """Define RNN-based encoders."""
 
 import tensorflow as tf
-import tensorflow_addons as tfa
+
+import opennmt.tfa as tfa
 
 from opennmt.encoders.encoder import Encoder, SequentialEncoder
 from opennmt.layers import common, rnn

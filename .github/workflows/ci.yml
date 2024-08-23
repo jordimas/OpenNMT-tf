@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tensorflow: [2.6, 2.7, 2.8, 2.9, '2.10', '2.11', '2.12', '2.13', '2.14']
+        tensorflow: [2.6, 2.7, 2.8, 2.9, '2.10', '2.11', '2.12', '2.13', '2.14','2.15']
         python-version: [3.8, 3.11]
         exclude:
           - python-version: 3.8
@@ -89,7 +89,7 @@ jobs:
           pytest --cov=opennmt --cov-report xml opennmt/tests
 
       - name: Upload coverage report
-        if: matrix.tensorflow == '2.14'
+        if: matrix.tensorflow == '2.15'
         uses: codecov/codecov-action@v3
 
 
